@@ -24,11 +24,11 @@ class Generator:
 
     # read json file to get level3 address
     def __jsonreader(self):
-        return json.load(open('src/level3.json', 'r', encoding='utf-8'))
+        return json.load(open('../src/level3.json', 'r', encoding='utf-8'))
 
     # read txt file to get level4 address
     def __txtreader(self):
-        return open('src/level4.txt', 'r', encoding='utf-8').readlines()
+        return open('../src/level4.txt', 'r', encoding='utf-8').readlines()
 
     # generate level1 address, province
     def generatelevel1(self):
@@ -74,7 +74,7 @@ class Generator:
 
 if __name__ == '__main__':
     generator = Generator()
-    generator.generatelevel1()
+    print(generator.generatelevel1())
     generator.generatelevel2()
     generator.generatelevel3()
     generator.generatelevel4()
