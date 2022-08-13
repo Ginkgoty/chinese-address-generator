@@ -5,13 +5,13 @@
 ### daoru生成器
     from chinese_address_generator import generator
 ### 生成一级地址——省
-    generator.generatelevel1()
+    generator.generatelevel1() #返回字符串
 ### 生成二级地址——省、市
-    generator.generatelevel2()
+    generator.generatelevel2() #返回字符串
 ### 生成三级地址——省、市、县
-    generator.generatelevel3()
+    generator.generatelevel3() #返回字符串
 ### 生成四级地址——省、市、县、街道
-    generator.generatelevel4()
+    generator.generatelevel4() #返回字符串
 ## 补充说明
 ### 查看原始数据
     import chinese_address_generator
