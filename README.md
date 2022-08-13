@@ -1,4 +1,6 @@
 # chinese-address-generator(中国地址随机生成器)
+### 使用方法
+    pip install chinese-address-generator
 ### 新建生成器
     generator = Generator()
 ### 生成一级地址——省
