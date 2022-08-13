@@ -5,7 +5,6 @@
 """
 import json
 
-
 class Reader:
     level3_list = json.load(open('../src/level3.json', 'r', encoding='utf-8'))
 

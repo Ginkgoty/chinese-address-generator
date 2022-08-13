@@ -70,11 +70,3 @@ class Generator:
             return province['region'] + city['region'] + county['region'] + town + " " + county['code']
         except:
             pass
-
-
-if __name__ == '__main__':
-    generator = Generator()
-    print(generator.generatelevel1())
-    generator.generatelevel2()
-    generator.generatelevel3()
-    generator.generatelevel4()
