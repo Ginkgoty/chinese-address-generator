@@ -6,6 +6,6 @@
 import json
 
 class Reader:
-    level3_list = json.load(open('../src/level3.json', 'r', encoding='utf-8'))
+    level3_list = json.load(open('src/level3.json', 'r', encoding='utf-8'))
 
-    level4_list = open('../src/level4.txt', 'r', encoding='utf-8').readlines()
+    level4_list = open('src/level4.txt', 'r', encoding='utf-8').readlines()

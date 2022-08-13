@@ -8,6 +8,6 @@ setup(
     url='https://github.com/uint8-t/chinese-address-generator',
     author_email='nmjbh@qq.com',
     packages=find_packages(),
-    include_package_data=True,
+    package_data={'chinese_address_generator': ['src/level3.json', 'src/level4.txt']},
     license="MIT"
 )
