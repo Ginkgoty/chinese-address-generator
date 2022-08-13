@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='chinese-address-generator',
-    version='0.1.0',
+    version='0.1.1',
     description='Random generation of Chinese place names',
     author='uint8_t',
     url='https://github.com/uint8-t/chinese-address-generator',
