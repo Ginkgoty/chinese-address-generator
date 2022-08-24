@@ -2,7 +2,7 @@
 ## 使用方法
 ### 通过pip安装
     pip install chinese-address-generator
-### daoru生成器
+### 导入生成器
     from chinese_address_generator import generator
 ### 生成一级地址——省
     generator.generatelevel1() #返回字符串
