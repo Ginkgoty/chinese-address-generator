@@ -24,7 +24,7 @@
 对数据文件，即src/*，进行定位，所以需要检查您存放pip包的实际site-packages目录是否与os.__file__中的那个site-packages目录相对应。
 ### Error 2
     generator.generatelevel4() #返回字符串
-有时回返回None，该问题出自源数据，来自https://github.com/moonrailgun/chinese-address-generator
+有时会返回None，该问题出自源数据，来自https://github.com/moonrailgun/chinese-address-generator
 
 
 具体原因是部分地址在level4.txt中的数值代码与level3中的不对应，后续版本会加大测试力度尽可能减轻该问题.
