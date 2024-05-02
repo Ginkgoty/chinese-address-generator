@@ -8,6 +8,7 @@ import json
 import random
 import os
 import platform
+from pathlib2 import Path
 
 
 # class Generator:
@@ -21,19 +22,21 @@ import platform
 
 # read json file to get level3 address
 def jsonreader():
-    if platform.system() == 'Windows':
-        path = os.path.dirname(os.__file__) + '\\site-packages\\chinese_address_generator\\src\\level3.json'
-    else:
-        path = os.path.dirname(os.__file__) + '/site-packages/chinese_address_generator/src/level3.json'
+    path = Path(__file__).parent.joinpath("src").joinpath("level3.json")
+    # if platform.system() == 'Windows':
+    #     path = os.path.dirname(os.__file__) + '\\site-packages\\chinese_address_generator\\src\\level3.json'
+    # else:
+    #     path = os.path.dirname(os.__file__) + '/site-packages/chinese_address_generator/src/level3.json'
     return json.loads(open(path, 'r', encoding='utf-8').read())
 
 
 # read txt file to get level4 address
 def txtreader():
-    if platform.system() == 'Windows':
-        path = os.path.dirname(os.__file__) + '\\site-packages\\chinese_address_generator\\src\\level4.txt'
-    else:
-        path = os.path.dirname(os.__file__) + '/site-packages/chinese_address_generator/src/level4.txt'
+    path = Path(__file__).parent.joinpath("src").joinpath("level4.txt")
+    # if platform.system() == 'Windows':
+    #     path = os.path.dirname(os.__file__) + '\\site-packages\\chinese_address_generator\\src\\level4.txt'
+    # else:
+    #     path = os.path.dirname(os.__file__) + '/site-packages/chinese_address_generator/src/level4.txt'
     return open(path, 'r', encoding='utf-8').readlines()
 
 
