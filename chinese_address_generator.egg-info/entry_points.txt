@@ -1,0 +1,2 @@
+[console_scripts]
+cnaddrgen = chinese_address_generator.cnaddrgen:main
