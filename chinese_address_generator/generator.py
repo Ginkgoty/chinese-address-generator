@@ -1,89 +1,143 @@
-#!/usr/bin/python3
-"""
-@Author  :   Ginkgoty
-@Time    :   2022/08/12
-@Version :   0.2.0
-"""
-import json
+# SPDX-FileCopyrightText: 2022-2026 Ginkgoty
+# SPDX-License-Identifier: MIT
+
+"""Random address generation backed by the bundled official dataset."""
+
+import functools
 import random
-import os
-import platform
-from pathlib2 import Path
-import re
+import warnings
+from typing import Callable, Optional, TypeVar, cast
+
+from ._data import get_dataset
+from .models import Address
+
+Function = TypeVar("Function", bound=Callable[..., object])
 
 
-# class Generator:
+def _deprecated(message: str) -> Callable[[Function], Function]:
+    """Decorate a compatibility API with a runtime deprecation warning."""
 
-# def __init__(self):
-#     self.__address_list = self.__jsonreader()
-#
-#     self.__level4_list = self.__txtreader()
-#
-#     self.__level4_temp = []
+    def decorator(function: Function) -> Function:
+        @functools.wraps(function)
+        def wrapper(*args: object, **kwargs: object) -> object:
+            warnings.warn(message, DeprecationWarning, stacklevel=2)
+            return function(*args, **kwargs)
 
-# read json file to get level3 address
-def jsonreader():
-    path = Path(__file__).parent.joinpath("src").joinpath("new_level3.json")
-    # if platform.system() == 'Windows':
-    #     path = os.path.dirname(os.__file__) + '\\site-packages\\chinese_address_generator\\src\\level3.json'
-    # else:
-    #     path = os.path.dirname(os.__file__) + '/site-packages/chinese_address_generator/src/level3.json'
-    return json.loads(open(path, 'r', encoding='utf-8').read())
+        wrapper.__deprecated__ = message
+        return cast(Function, wrapper)
+
+    return decorator
 
 
-# read txt file to get level4 address
-def txtreader():
-    path = Path(__file__).parent.joinpath("src").joinpath("new_level4.txt")
-    # if platform.system() == 'Windows':
-    #     path = os.path.dirname(os.__file__) + '\\site-packages\\chinese_address_generator\\src\\level4.txt'
-    # else:
-    #     path = os.path.dirname(os.__file__) + '/site-packages/chinese_address_generator/src/level4.txt'
-    return open(path, 'r', encoding='utf-8').readlines()
+def _validate_level(level: int) -> None:
+    """Validate a requested administrative level."""
+    if isinstance(level, bool) or level not in (1, 2, 3, 4):
+        raise ValueError("level must be one of 1, 2, 3, or 4")
 
 
-__address_list = jsonreader()
+def generate_address(level: int = 4, *, rng: Optional[random.Random] = None) -> Address:
+    """Return a random address ending at the requested administrative level.
 
-__level4_list = txtreader()
+    Selection is uniform across all official divisions at the requested level.
+    Pass a :class:`random.Random` instance for reproducible output.
 
-# generate level1 address, province
-def generatelevel1():
-    try:
-        province = random.choice(__address_list)
-        return province['region'] + " " + province['code']
-    except:
-        pass
+    Args:
+        level: Target administrative level from 1 through 4.
+        rng: Optional random number generator used for selection.
 
+    Returns:
+        A structured address ending at the requested level.
 
-# generate level2 address, province + city
-def generatelevel2():
-    try:
-        province = random.choice(__address_list)
-        city = random.choice(province['regionEntitys'])
-        return province['region'] + city['region'] + " " + city['code']
-    except:
-        pass
-
-
-# generate level3 address, province + city + county
-def generatelevel3():
-    try:
-        province = random.choice(__address_list)
-        city = random.choice(province['regionEntitys'])
-        county = random.choice(city['regionEntitys'][1:])
-        return province['region'] + city['region'] + county['region'] + " " + county['code']
-    except:
-        pass
+    Raises:
+        ValueError: If ``level`` is outside the supported range.
+    """
+    _validate_level(level)
+    dataset = get_dataset()
+    chooser = rng if rng is not None else random
+    division = chooser.choice(dataset.by_level[level])
+    return Address(dataset.path_for(division))
 
 
-# generate level4 address, province + city + county + town
-def generatelevel4():
-    try:
-        province = random.choice(__address_list)
-        city = random.choice(province['regionEntitys'])
-        county = random.choice(city['regionEntitys'])
-        pattern = re.compile(f"^{county['code']}")
-        matches = [item[13:-1] for item in __level4_list if pattern.match(item)]
-        town = random.choice(matches)
-        return province['region'] + city['region'] + county['region'] + town + " " + county['code']
-    except:
-        pass
+class AddressGenerator:
+    """An isolated, optionally seeded random address generator."""
+
+    def __init__(self, seed: Optional[int] = None) -> None:
+        """Initialise an isolated generator.
+
+        Args:
+            seed: Optional seed used to make generated sequences reproducible.
+        """
+        self._random = random.Random(seed)
+
+    def generate(self, level: int = 4) -> Address:
+        """Return a random address using this instance's random state.
+
+        Args:
+            level: Target administrative level from 1 through 4.
+
+        Returns:
+            A structured address ending at the requested level.
+
+        Raises:
+            ValueError: If ``level`` is outside the supported range.
+        """
+        return generate_address(level, rng=self._random)
+
+
+def generate_level1() -> str:
+    """Return a province-level address using the legacy string format."""
+    return str(generate_address(1))
+
+
+def generate_level2() -> str:
+    """Return a prefecture-level address using the legacy string format."""
+    return str(generate_address(2))
+
+
+def generate_level3() -> str:
+    """Return a county-level address using the legacy string format."""
+    return str(generate_address(3))
+
+
+def generate_level4() -> str:
+    """Return a township-level address using the legacy string format."""
+    return str(generate_address(4))
+
+
+# Backward-compatible names from versions 0.x.
+@_deprecated("generatelevel1() is deprecated; use generate_level1() instead.")
+def generatelevel1() -> str:
+    """Return level 1 using the deprecated 0.x function name."""
+    return generate_level1()
+
+
+@_deprecated("generatelevel2() is deprecated; use generate_level2() instead.")
+def generatelevel2() -> str:
+    """Return level 2 using the deprecated 0.x function name."""
+    return generate_level2()
+
+
+@_deprecated("generatelevel3() is deprecated; use generate_level3() instead.")
+def generatelevel3() -> str:
+    """Return level 3 using the deprecated 0.x function name."""
+    return generate_level3()
+
+
+@_deprecated("generatelevel4() is deprecated; use generate_level4() instead.")
+def generatelevel4() -> str:
+    """Return level 4 using the deprecated 0.x function name."""
+    return generate_level4()
+
+
+__all__ = [
+    "AddressGenerator",
+    "generate_address",
+    "generate_level1",
+    "generate_level2",
+    "generate_level3",
+    "generate_level4",
+    "generatelevel1",
+    "generatelevel2",
+    "generatelevel3",
+    "generatelevel4",
+]

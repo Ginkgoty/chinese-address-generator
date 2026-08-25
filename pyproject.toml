@@ -1,0 +1,85 @@
+# SPDX-FileCopyrightText: 2022-2026 Ginkgoty
+# SPDX-License-Identifier: MIT
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "chinese-address-generator"
+dynamic = ["version"]
+description = "Generate random Chinese administrative addresses from authoritative data"
+readme = "README.md"
+requires-python = ">=3.8,<3.15"
+license = "MIT"
+authors = [
+  { name = "Ginkgoty", email = "int32@foxmail.com" },
+]
+keywords = ["address", "china", "administrative-division", "generator"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Typing :: Typed",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/Ginkgoty/chinese-address-generator"
+Documentation = "https://github.com/Ginkgoty/chinese-address-generator#readme"
+Issues = "https://github.com/Ginkgoty/chinese-address-generator/issues"
+Changelog = "https://github.com/Ginkgoty/chinese-address-generator/blob/main/CHANGELOG.md"
+
+[project.scripts]
+cnaddrgen = "chinese_address_generator.cli:main"
+
+[dependency-groups]
+dev = [
+  "build>=1.2.2",
+  "pytest>=8.3.5",
+  "pytest-cov>=5.0.0,<6; python_version < '3.9'",
+  "pytest-cov>=6.0.0; python_version >= '3.9'",
+  "ruff>=0.12.0",
+  "twine>=6.1.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["chinese_address_generator"]
+
+[tool.hatch.version]
+path = "chinese_address_generator/_version.py"
+
+[tool.pytest.ini_options]
+addopts = "--strict-config --strict-markers --cov=chinese_address_generator --cov-report=term-missing"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+
+[tool.ruff.lint]
+select = ["B", "D", "E", "F", "I", "PT", "RUF", "SIM", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+[tool.uv]
+default-groups = ["dev"]

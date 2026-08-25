@@ -1,22 +1,38 @@
-"""
-@Author  :   uint8_t
-@Time    :   2022/08/12
-@Version :   0.1.0
-"""
+# SPDX-FileCopyrightText: 2022-2026 Ginkgoty
+# SPDX-License-Identifier: MIT
 
-import json
-import platform
-import os
-from pathlib2 import Path
+"""Generate Chinese administrative addresses from authoritative data."""
 
-path1 = Path(__file__).parent.joinpath("src").joinpath("new_level3.json")
-path2 = Path(__file__).parent.joinpath("src").joinpath("new_level4.txt")
-# if platform.system() == 'Windows':
-#     path1 = str(os.path.dirname(os.__file__) + '\\site-packages\\chinese_address_generator\\src\\level3.json')
-#     path2 = os.path.dirname(os.__file__) + '\\site-packages\\chinese_address_generator\\src\\level4.txt'
-# else:
-#     path1 = os.path.dirname(os.__file__) + '/site-packages/chinese_address_generator/src/level3.json'
-#     path2 = os.path.dirname(os.__file__) + '/site-packages/chinese_address_generator/src/level4.txt'
+from ._data import get_data_metadata, load_divisions
+from ._version import __version__
+from .generator import (
+    AddressGenerator,
+    generate_address,
+    generate_level1,
+    generate_level2,
+    generate_level3,
+    generate_level4,
+    generatelevel1,
+    generatelevel2,
+    generatelevel3,
+    generatelevel4,
+)
+from .models import Address, Division
 
-level3_list = json.loads(open(path1, 'r', encoding='utf-8').read())
-level4_list = open(path2, 'r', encoding='utf-8').readlines()
+__all__ = [
+    "Address",
+    "AddressGenerator",
+    "Division",
+    "__version__",
+    "generate_address",
+    "generate_level1",
+    "generate_level2",
+    "generate_level3",
+    "generate_level4",
+    "generatelevel1",
+    "generatelevel2",
+    "generatelevel3",
+    "generatelevel4",
+    "get_data_metadata",
+    "load_divisions",
+]

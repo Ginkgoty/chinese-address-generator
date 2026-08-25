@@ -1,0 +1,77 @@
+# SPDX-FileCopyrightText: 2022-2026 Ginkgoty
+# SPDX-License-Identifier: MIT
+
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build and verify distributions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+      - run: uv sync --locked
+      - run: uv run pytest
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - name: Verify release tag matches package version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -eu
+          case "$RELEASE_TAG" in
+            v*) ;;
+            *)
+              echo "Release tag must start with 'v': $RELEASE_TAG" >&2
+              exit 1
+              ;;
+          esac
+          package_version="$(uv run python -c 'from chinese_address_generator import __version__; print(__version__)')"
+          tag_version="${RELEASE_TAG#v}"
+          if [ "$package_version" != "$tag_version" ]; then
+            echo "Release tag $RELEASE_TAG does not match package version $package_version" >&2
+            exit 1
+          fi
+      - run: uv build
+      - run: uv run twine check dist/*
+      - name: Store package distributions
+        uses: actions/upload-artifact@v7
+        with:
+          name: python-package-distributions
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish distributions to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/chinese-address-generator
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Retrieve package distributions
+        uses: actions/download-artifact@v8
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Publish distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
