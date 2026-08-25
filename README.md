@@ -134,14 +134,6 @@ uv run python tools/update_data.py
 更新工具会校验记录总数、代码长度、唯一性及所有父子关系，然后以原子方式替换内置数据。
 只有在官方页面公布新的年度快照后，才应调整工具中的表名和数据截止日期。
 
-## 发布维护
-
-正式版本通过 GitHub Actions 和 PyPI Trusted Publishing 自动发布，不在仓库中保存长期
-PyPI Token。发布任务要求 `v` 开头的 Git 标签与包版本完全一致，并通过受保护的 `pypi`
-Environment 后才会上传。
-
-完整的首次配置和发布步骤请参阅[发布指南](docs/RELEASING.md)。
-
 ## 许可证
 
 项目代码使用 [MIT License](LICENSE)。

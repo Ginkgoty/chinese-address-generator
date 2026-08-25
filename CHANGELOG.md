@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented in this file.
 
-## 1.0.0 - Unreleased
+## 1.0.0 - 2026-08-25
 
 ### Added
 
@@ -13,7 +13,6 @@ All notable changes to this project are documented in this file.
 - Added uv-based development, linting, tests, packaging checks, and Python 3.8–3.14 CI.
 - Added English and Simplified Chinese documentation.
 - Added SPDX file metadata and strict PEP 257 docstring checks.
-- Added an approval-gated PyPI Trusted Publishing workflow and bilingual release guides.
 
 ### Changed
 

@@ -142,14 +142,6 @@ The updater validates record counts, code lengths, uniqueness, and every parent 
 atomically replacing the bundled file. Update its table name and source date only after the official
 publication page announces a new annual snapshot.
 
-## Releasing
-
-Production releases are published automatically through GitHub Actions and PyPI Trusted Publishing;
-no long-lived PyPI token is stored in the repository. The release job requires a `v`-prefixed Git
-tag that exactly matches the package version and deploys through the protected `pypi` environment.
-
-See the [release guide](RELEASING.en.md) for initial setup and the complete maintainer procedure.
-
 ## License
 
 Code is released under the [MIT License](../LICENSE).
